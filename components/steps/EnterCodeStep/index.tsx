@@ -3,30 +3,42 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { WhiteBlock } from '../../WhiteBlock';
 import { StepInfo } from '../../StepInfo';
-import { Axios } from '../../../core/axios';
+import { Button } from '../../Button';
+import Axios from '../../../core/axios'
 
 import styles from './EnterPhoneStep.module.scss';
-import { MainContext } from '../../../pages';
 
-export const EnterCodeStep = () => {
+export const EnterCodeStep: React.FC = () => {
+  const router = useRouter();
   const [codes, setCodes] = React.useState(['', '', '', '']);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  const nextDisabled = codes.some((v) => !v) || codes.length < 4;
+  const nextDisabled = codes.some((v) => !v);
 
-  const handleChangeInput = (e) => {
-    const index = Number(e.target.getAttribute('id'));
-    const value = e.target.value;
+  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const index = Number(event.target.getAttribute('id'));
+    const value = event.target.value;
     setCodes((prev) => {
       const newArr = [...prev];
       newArr[index] = value;
       return newArr;
     });
-    if (e.target.nextSibling) {
-      (e.target.nextSibling).focus();
+    if (event.target.nextSibling) {
+      (event.target.nextSibling as HTMLInputElement).focus();
     } 
   };
 
-console.log(codes);
+  const onSubmit = async () => {
+    try {
+      setIsLoading(true);
+      await Axios.get('/todos');
+      router.push('/rooms')
+    }
+    catch (error) {
+      alert('Ошибка при активации!')
+    }
+    setIsLoading(false);
+  }
 
   return (
     <div className={styles.block}>
@@ -47,6 +59,10 @@ console.log(codes);
                 />
               ))}
             </div>
+            <Button className="mt-30" onClick={onSubmit} disabled={nextDisabled}>
+              Next
+              <img className="d-ib ml-10" src="/static/arrow.svg" />
+            </Button>
           </WhiteBlock>
         </>
       ) : (

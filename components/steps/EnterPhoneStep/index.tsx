@@ -6,11 +6,17 @@ import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
 
 import styles from './EnterPhoneStep.module.scss';
+import { MainContext } from '../../../pages';
+
+interface InputValueState {
+  formattedValue: string;
+  value: string;
+}
 
 
-
-export const EnterPhoneStep = () => {
-  const [values, setValues] = React.useState({});
+export const EnterPhoneStep: React.FC = () => {
+  const { onNextStep } = React.useContext(MainContext);
+  const [values, setValues] = React.useState<InputValueState>({} as InputValueState);
 
   const nextDisabled = !values.formattedValue || values.formattedValue.includes('_');
 
@@ -30,10 +36,10 @@ export const EnterPhoneStep = () => {
             mask="_"
             placeholder="+7 (999) 333-22-11"
             value={values.value}
-            onValueChange={(values) => setValues(values)}
+            onValueChange={({ formattedValue, value }) => setValues({ formattedValue, value })}
           />
         </div>
-        <Button disabled={nextDisabled} >
+        <Button disabled={nextDisabled} onClick={onNextStep} >
               Next
               <img className="d-ib ml-10" src="/static/arrow.svg" />
         </Button>

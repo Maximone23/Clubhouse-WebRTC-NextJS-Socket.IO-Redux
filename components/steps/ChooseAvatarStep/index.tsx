@@ -3,18 +3,25 @@ import clsx from 'clsx';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
+import { Avatar } from '../../Avatar';
 
 import styles from './ChooseAvatarStep.module.scss';
+import { MainContext } from '../../../pages';
 
 
 
-export const ChooseAvatarStep = () => {
-  const inputFileRef = React.useRef();
+export const ChooseAvatarStep: React.FC = () => {
+  const { onNextStep } = React.useContext(MainContext);
+  const inputFileRef = React.useRef<HTMLInputElement>(null);
+  const [avatarUrl, setAvatarUrl] = React.useState<string>('https://w7.pngwing.com/pngs/336/946/png-transparent-avatar-user-medicine-surgery-patient-avatar-face-heroes-head.png');
 
-  const handleChangeImage = (e) => {
-    if(inputFileRef.current) {
-      inputFileRef.current.addEventListener('change', handleChangeImage)
+  const handleChangeImage = (event: Event): void => {
+    const file = (event.target as HTMLInputElement).files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setAvatarUrl(imageUrl);
     }
+    
   };
 
   React.useEffect(() => {
@@ -32,7 +39,11 @@ export const ChooseAvatarStep = () => {
       />
       <WhiteBlock className={clsx('m-auto mt-40', styles.whiteBlock)}>
         <div className={styles.avatar}>
-          <img />
+          <Avatar
+            width="120px" 
+            height="120px"
+            src={avatarUrl} 
+          />
         </div>
         <div className="mb-30">
           <label htmlFor="image" className="link cup">
@@ -40,7 +51,7 @@ export const ChooseAvatarStep = () => {
           </label>
         </div>
         <input id="image" ref={inputFileRef} type="file" hidden />
-        <Button>
+        <Button onClick={onNextStep}>
           Next
           <img className="d-ib ml-10" src="/static/arrow.svg" />
         </Button>

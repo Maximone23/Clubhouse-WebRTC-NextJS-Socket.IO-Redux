@@ -1,12 +1,25 @@
+import React from 'react';
 import clsx from 'clsx';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
 
 import styles from './EnterNameStep.module.scss';
-import React from 'react';
+import { MainContext } from '../../../pages';
 
-export const EnterNameStep = () => {
+export const EnterNameStep: React.FC = () => {
+  const [inputValue, setInputValue] = React.useState<string>('');
+  const { onNextStep } = React.useContext(MainContext);
+  const nextDisabled = !inputValue;
+
+  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  }
+
+  const onClickNextStep = () => {
+    onNextStep();
+  };
+
   return (
     <div className={styles.block}>
       <StepInfo
@@ -23,7 +36,7 @@ export const EnterNameStep = () => {
             placeholder="Enter fullname"
           />
         </div>
-        <Button>
+        <Button onClick={onClickNextStep} disabled={nextDisabled}>
           Next
           <img className="d-ib ml-10" src="/static/arrow.svg" />
         </Button>
