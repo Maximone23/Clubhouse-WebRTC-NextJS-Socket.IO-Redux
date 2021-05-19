@@ -8,8 +8,8 @@ import styles from './EnterNameStep.module.scss';
 import { MainContext } from '../../../pages';
 
 export const EnterNameStep: React.FC = () => {
-  const [inputValue, setInputValue] = React.useState<string>('');
-  const { onNextStep } = React.useContext(MainContext);
+  const { onNextStep, userData, setFieldValue } = React.useContext(MainContext);
+  const [inputValue, setInputValue] = React.useState<string>(userData.fullname);
   const nextDisabled = !inputValue;
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +17,7 @@ export const EnterNameStep: React.FC = () => {
   }
 
   const onClickNextStep = () => {
+    setFieldValue('fullname', inputValue)
     onNextStep();
   };
 
@@ -36,7 +37,7 @@ export const EnterNameStep: React.FC = () => {
             placeholder="Enter fullname"
           />
         </div>
-        <Button onClick={onClickNextStep} disabled={nextDisabled}>
+        <Button disabled={nextDisabled} onClick={onClickNextStep} >
           Next
           <img className="d-ib ml-10" src="/static/arrow.svg" />
         </Button>

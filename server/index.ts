@@ -13,6 +13,8 @@ const app = express();
 app.use(passport.initialize());
 
 
+app.get('/upload', passport.authenticate('github'));
+
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get('/auth/github/callback', 

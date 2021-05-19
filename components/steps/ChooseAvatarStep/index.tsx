@@ -11,9 +11,9 @@ import { MainContext } from '../../../pages';
 
 
 export const ChooseAvatarStep: React.FC = () => {
-  const { onNextStep } = React.useContext(MainContext);
+  const { onNextStep, userData } = React.useContext(MainContext);
   const inputFileRef = React.useRef<HTMLInputElement>(null);
-  const [avatarUrl, setAvatarUrl] = React.useState<string>('https://w7.pngwing.com/pngs/336/946/png-transparent-avatar-user-medicine-surgery-patient-avatar-face-heroes-head.png');
+  const [avatarUrl, setAvatarUrl] = React.useState<string>(userData.avatarUrl);
 
   const handleChangeImage = (event: Event): void => {
     const file = (event.target as HTMLInputElement).files[0];

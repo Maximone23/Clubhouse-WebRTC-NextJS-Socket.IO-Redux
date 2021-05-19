@@ -8,7 +8,7 @@ import styles from './GitHubStep.module.scss';
 import { MainContext } from '../../../pages';
 
 export const GitHubStep: React.FC = () => {
-  const { onNextStep } = React.useContext(MainContext);
+  const { onNextStep, setUserData } = React.useContext(MainContext);
   const onClickAuth = () => {
     const win = window.open(
       'http://localhost:4000/auth/github', 
@@ -18,17 +18,20 @@ export const GitHubStep: React.FC = () => {
     const timer = setInterval(() => {
       if (win.closed) {
         clearInterval(timer);
-        onNextStep();
       }
     }, 100)
   }
 
   React.useEffect(() => {
-    window.addEventListener('message', (data) => {
-      console.log(data);
-      
-    })
-  })
+    window.addEventListener('message', ({ data }) => {
+      const user: string = data;
+      if(typeof user === 'string' && user.includes('avatarUrl')) {
+        const json = JSON.parse(user);
+        setUserData(json);
+        onNextStep();
+      }
+    });
+  }, []);
 
   return (
     <div className={styles.block}>
@@ -41,7 +44,7 @@ export const GitHubStep: React.FC = () => {
           Import from GitHub
           <img className="d-ib ml-10" src="/static/arrow.svg" />
         </Button>
-        <div className="link mt-20 cup d-ib">Enter my info manually</div>
+        <div className="link mt-20 cup d-ib" >Enter my info manually</div>
       </WhiteBlock>
     </div>
   );
