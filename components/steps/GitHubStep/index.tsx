@@ -9,13 +9,33 @@ import { MainContext } from '../../../pages';
 
 export const GitHubStep: React.FC = () => {
   const { onNextStep } = React.useContext(MainContext);
+  const onClickAuth = () => {
+    const win = window.open(
+      'http://localhost:4000/auth/github', 
+      'Auth', 
+      'width=500,height=500,status=yes,toolbar=no,menubar=no,location=no');
+
+    const timer = setInterval(() => {
+      if (win.closed) {
+        clearInterval(timer);
+        onNextStep();
+      }
+    }, 100)
+  }
+
+  React.useEffect(() => {
+    window.addEventListener('message', (data) => {
+      console.log(data);
+      
+    })
+  })
 
   return (
     <div className={styles.block}>
       <StepInfo icon="/static/connect.png" title="Do you want import info from GitHub?" />
       <WhiteBlock className={clsx('m-auto mt-40', styles.whiteBlock)}>
         <Button
-          onClick={onNextStep}
+          onClick={onClickAuth}
           className={clsx(styles.button, 'd-i-flex align-items-center')}>
           <img className="d-ib mr-10" src="/static/github.svg" />
           Import from GitHub
