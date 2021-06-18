@@ -7,19 +7,36 @@ import { Avatar } from '../../Avatar';
 
 import styles from './ChooseAvatarStep.module.scss';
 import { MainContext } from '../../../pages';
+import { Axios } from '../../../core/axios';
 
+const uploadFile = async (file: File): Promise<{url: string}> => {
+  const formData = new FormData();
 
+  formData.append('photo', file);
+
+  const { data } = await Axios.post('/upload', formData, {
+    headers: {
+      'Content-Type': 'multypart/form/data'
+    },
+  });
+  return data;
+};
 
 export const ChooseAvatarStep: React.FC = () => {
-  const { onNextStep, userData } = React.useContext(MainContext);
+  const { onNextStep, userData, setFieldValue } = React.useContext(MainContext);
   const inputFileRef = React.useRef<HTMLInputElement>(null);
-  const [avatarUrl, setAvatarUrl] = React.useState<string>(userData.avatarUrl);
+  const [avatarUrl, setAvatarUrl] = React.useState<string>('https://sun2-3.userapi.com/s/v1/if1/CAR1Aao3yIica7xq77xIIMMTn29CME-cE5JSJBc8OTNVt29JQjnhR0ZsX_9IO-AzgwVbfgB6.jpg?size=200x0&quality=96&crop=138,44,1048,1048&ava=1');
 
-  const handleChangeImage = (event: Event): void => {
-    const file = (event.target as HTMLInputElement).files[0];
+  const handleChangeImage = async (event: Event) => {
+    const target = event.target as HTMLInputElement
+    const file = target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setAvatarUrl(imageUrl);
+      const data = await uploadFile(file);
+      target.value = '';
+      setAvatarUrl(data.url);
+      setFieldValue('avatarUrl', data.url);
     }
     
   };
@@ -34,7 +51,7 @@ export const ChooseAvatarStep: React.FC = () => {
     <div className={styles.block}>
       <StepInfo
         icon="/static/celebration.png"
-        title={'Okay, Maxim Zalutskii!'}
+        title={`Okay, ${userData?.fullname}!`}
         description="How’s this photo?"
       />
       <WhiteBlock className={clsx('m-auto mt-40', styles.whiteBlock)}>

@@ -20,7 +20,7 @@ interface MainContextProps {
   setUserData: React.Dispatch<React.SetStateAction<User>>;
   setFieldValue: (field: keyof User, value: string) => void;
   step: number;
-  userData: User;
+  userData?: User;
 }
 interface User {
   id: string;
@@ -36,7 +36,7 @@ export const MainContext = React.createContext<MainContextProps>({} as MainConte
 
 
 export default function Home() {
-const [step, setStep] = React.useState<number>(0);
+const [step, setStep] = React.useState<number>(4);
 const [userData, setUserData] = React.useState<User>();
 const Step = stepComponents[step];
 
