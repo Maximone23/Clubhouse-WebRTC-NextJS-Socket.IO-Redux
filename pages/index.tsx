@@ -17,18 +17,19 @@ const stepComponents = {
 
 interface MainContextProps {
   onNextStep: () => void;
-  setUserData: React.Dispatch<React.SetStateAction<User>>;
-  setFieldValue: (field: keyof User, value: string) => void;
+  setUserData: React.Dispatch<React.SetStateAction<UserData>>;
+  setFieldValue: (field: keyof UserData, value: string) => void;
   step: number;
-  userData?: User;
+  userData?: UserData;
 }
-interface User {
-  id: string;
+export interface UserData {
+  id: number;
   fullname: string;
   avatarUrl: string;
   isActive: number;
   username: string;
   phone: string;
+  token?: string
 }
 
 export const MainContext = React.createContext<MainContextProps>({} as MainContextProps);
@@ -36,8 +37,8 @@ export const MainContext = React.createContext<MainContextProps>({} as MainConte
 
 
 export default function Home() {
-const [step, setStep] = React.useState<number>(4);
-const [userData, setUserData] = React.useState<User>();
+const [step, setStep] = React.useState<number>(0);
+const [userData, setUserData] = React.useState<UserData>();
 const Step = stepComponents[step];
 
 const onNextStep = () => {
